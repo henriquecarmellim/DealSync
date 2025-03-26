@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Erro 404 - Página não encontrada</title>
+  <style>
+    /* Reset e configurações básicas */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      font-size: 8rem;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.5rem;
+      margin: 10px 0;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 24px;
+      border: 2px solid #0f0;
+      background: transparent;
+      color: #0f0;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn:hover {
+      background: #0f0;
+      color: #000;
+    }
+    /* Animação de fundo sutil */
+    .background-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(0,255,0,0.1), transparent);
+      opacity: 0.5;
+      animation: pulse 5s infinite;
+      z-index: -1;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-animation"></div>
+  <div class="container">
+    <h1>404</h1>
+    <p>A página que você procura não foi encontrada.</p>
+    <p>Verifique o endereço ou retorne à página inicial.</p>
+    <a class="btn" href="/">Voltar para o início</a>
+  </div>
+</body>
+</html>
