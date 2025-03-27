@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Falhou | DealSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-green: #00ff9d;
+            --neon-red: #ff3a5e;
+            --dark-bg: #121212;
+            --card-bg: #1a1a1a;
+            --text-color: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .status-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(255, 58, 94, 0.2);
+            border: 1px solid rgba(255, 58, 94, 0.1);
+            animation: shake 0.5s ease-in-out, fadeIn 0.8s ease-out;
+        }
+        
+        .status-icon {
+            font-size: 5rem;
+            color: var(--neon-red);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--neon-red);
+        }
+        
+        .status-message {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .error-details {
+            background-color: rgba(255, 58, 94, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+            border-left: 4px solid var(--neon-red);
+        }
+        
+        .error-code {
+            font-family: monospace;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+        
+        .transaction-details {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .detail-value {
+            font-weight: bold;
+        }
+        
+        .detail-value.highlight {
+            color: var(--neon-red);
+        }
+        
+        .btn {
+            background-color: var(--neon-green);
+            color: black;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 255, 157, 0.4);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            margin-left: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(0, 255, 157, 0.1);
+        }
+        
+        .btn-retry {
+            background-color: var(--neon-red);
+            color: white;
+        }
+        
+        .btn-retry:hover {
+            box-shadow: 0 6px 15px rgba(255, 58, 94, 0.4);
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-10px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(10px);
+            }
+        }
+        
+        .glitch {
+            position: relative;
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0% {
+                text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            14% {
+                text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            15% {
+                text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                            0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            49% {
+                text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                            0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            50% {
+                text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                            0.05em 0 0 rgba(0, 255, 0, 0.75),
+                            0 -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            99% {
+                text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                            0.05em 0 0 rgba(0, 255, 0, 0.75),
+                            0 -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            100% {
+                text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+        }
+        
+        .error-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .error-line {
+            position: absolute;
+            background-color: var(--neon-red);
+            opacity: 0.1;
+            height: 1px;
+            width: 100%;
+            animation: errorLine 6s infinite linear;
+        }
+        
+        @keyframes errorLine {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-lines" id="error-lines"></div>
+    
+    <div class="main-content">
+        <div class="status-card">
+            <div class="status-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <h1 class="status-title glitch">Pagamento Falhou</h1>
+            <p class="status-message">Infelizmente, ocorreu um erro ao processar seu pagamento. Por favor, tente novamente.</p>
+            
+            <div class="error-details">
+                <p><strong>Detalhes do erro:</strong></p>
+                <p>Erro na transação: <span class="error-code">#1234567890</span></p>
+            </div>
+            
+            <div class="transaction-details">
+                <div class="detail-row">
+                    <span class="detail-label">ID da transação:</span>
+                    <span class="detail-value">TRX-2023-8742</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Data:</span>
+                    <span class="detail-value">27/03/2025, 15:16</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Método de pagamento:</span>
+                    <span class="detail-value">MercadoPago</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Valor:</span>
+                    <span class="detail-value highlight">R$ 100,00</span>
+                </div>
+            </div>
+            
+            <div class="btn-container" style="margin-top: 2rem;">
+                <a href="#" class="btn btn-retry">Tentar Novamente</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Gerar linhas de erro para o efeito de glitch
+        const errorLinesContainer = document.getElementById('error-lines');
+        for (let i = 0; i < 5; i++) {
+            const line = document.createElement('div');
+            line.classList.add('error-line');
+            line.style.animationDelay = `${i * 1.5}s`;
+            errorLinesContainer.appendChild(line);
+        }
+    </script>
+</body>
+</html>

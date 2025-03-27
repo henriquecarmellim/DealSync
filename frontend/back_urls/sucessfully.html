@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Bem-Sucedido | DealSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-green: #00ff9d;
+            --dark-bg: #121212;
+            --card-bg: #1a1a1a;
+            --text-color: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .status-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 255, 157, 0.11);
+            border: 1px solid rgba(0, 255, 157, 0.1);
+            animation: fadeIn 0.8s ease-out, floatUp 0.8s ease-out;
+        }
+        
+        .status-icon {
+            font-size: 5rem;
+            color: var(--neon-green);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--neon-green);
+        }
+        
+        .status-message {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .transaction-details {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .detail-value {
+            font-weight: bold;
+        }
+        
+        .detail-value.highlight {
+            color: var(--neon-green);
+        }
+        
+        .btn {
+            background-color: var(--neon-green);
+            color: black;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 255, 157, 0.096);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            margin-left: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(0, 255, 157, 0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: var(--neon-green);
+            animation: fillProgress 1s ease-out forwards;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes floatUp {
+            from {
+                transform: translateY(30px);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fillProgress {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="status-card">
+            <div class="status-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 class="status-title">Pagamento Aprovado</h1>
+            <p class="status-message">Seu pagamento foi processado com sucesso. Obrigado pela sua compra!</p>
+            
+            <div class="transaction-details">
+                <div class="detail-row">
+                    <span class="detail-label">ID da Transação</span>
+                    <span class="detail-value">TRX-2023-8742</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Data</span>
+                    <span class="detail-value">27/03/2025, 15:16</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Método</span>
+                    <span class="detail-value">Cartão de Crédito ****4582</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Valor</span>
+                    <span class="detail-value highlight">R$ 1.250,00</span>
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <a href="#" class="btn">Ver Recibo</a>
+                <a href="#" class="btn btn-outline">Voltar ao Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

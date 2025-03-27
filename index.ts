@@ -1,12 +1,12 @@
 import express, { type Request, type Response, type Application } from 'express';
 import { registerRoutes } from './handlers/route.handler';
 import dotenv from 'dotenv';
-import mpsdk, { Payment } from 'mercadopago';
+import mpsdk, { Payment, Preference } from 'mercadopago';
 import chalk from 'chalk';
 dotenv.config();
 
 export const mercadopago = new mpsdk({
-    accessToken: process.env.MERCADOPAGO_PRODUCTION_ACCESS_TOKEN as string
+    accessToken: process.env.MERCADOPAGO_TEST_SECOND_ACCESS_TOKEN as string
 });
 
 const app: Application = express();
