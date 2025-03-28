@@ -1,7 +1,7 @@
 import express, { type Request, type Response, type Router } from 'express';
 import { mercadopago } from '../index';
 import pool from '../databases/MySQL/pool';
-import { Payment, Preference } from 'mercadopago';
+import { Payment } from 'mercadopago';
 
 const router: Router = express.Router();
 
@@ -15,10 +15,14 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     try {
-        res.status(200).json({ successfully: true, message: 'Evento processado com sucesso.' });
+        res.status(200);
+        res.json({ successfully: true, message: 'Evento processado com sucesso.' });
+        return;
     } catch (error) {
         console.error('Erro ao processar evento do webhook do Mercado Pago:', error);
-        res.status(500).json({ error: 'Erro ao processar evento do webhook do Mercado Pago.' });
+        res.status(500);
+        res.json({ error: 'Erro ao processar evento do webhook do Mercado Pago.' });
+        return;
     }
 });
 
@@ -33,29 +37,35 @@ async function handlePaymentCreatedEvent(req: Request, res: Response) {
 
         console.log('Fetched payment metadata:', JSON.stringify(response.metadata, null, 2));
 
-        const [[order]]: any = await pool.execute(
-            'SELECT * FROM orders WHERE body_id = ?',
+        const [[transaction]]: any = await pool.execute(
+            'SELECT * FROM transactions WHERE body_id = ?',
             [response.metadata?.payment_id]
         );
 
-        if (!order) {
-            console.error('Order not found:', `No order found with ID ${response.metadata?.payment_id}`);
-            return res.status(404).json({ successfully: false, message: 'Order not found.' });
+        if (!transaction) {
+            console.error('Transaction not found:', `No transaction found with ID ${response.metadata?.payment_id}`);
+            res.status(404);
+            res.json({ successfully: false, message: 'Transaction not found.' });
+            return;
         }
 
-        console.log('Order found:', JSON.stringify(order, null, 2));
+        console.log('Transaction found:', JSON.stringify(transaction, null, 2));
 
         await pool.execute(
-            'UPDATE orders SET status = ? WHERE body_id = ?',
-            ['approved', order.body_id]
+            'UPDATE transactions SET status = ? WHERE body_id = ?',
+            ['approved', transaction.body_id]
         );
 
-        console.log('Order status updated to approved for order ID:', order.id);
+        console.log('Transaction status updated to approved for transaction ID:', transaction.id);
 
-        return res.status(200).json({ successfully: true, message: 'Event processed successfully.' });
+        res.status(200);
+        res.json({ successfully: true, message: 'Event processed successfully.' });
+        return;
     } catch (error) {
         console.error('Error processing payment created event:', error);
-        return res.status(500).json({ successfully: false, message: 'Error processing payment created event.' });
+        res.status(500);
+        res.json({ successfully: false, message: 'Error processing payment created event.' });
+        return;
     }
 }
 

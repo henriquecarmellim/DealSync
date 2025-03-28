@@ -13,14 +13,22 @@ router.post('/', async (req: Request, res: Response) => {
   const companySlug = req.body.companySlug.toLowerCase();
 
   if (!companySlug || !amount || !description) {
-    res.status(400).json({ successfully: false, message: 'Parâmetros ausentes: companySlug, amount e description são obrigatórios.' });
-    return
+    res.status(400);
+    res.json({
+      successfully: false,
+      message: 'Parâmetros ausentes: companySlug, amount e description são obrigatórios.',
+    });
+    return;
   }
 
   const parsedAmount = parseFloat(amount);
   if (isNaN(parsedAmount)) {
-    res.status(400).json({ successfully: false, message: 'O valor de amount deve ser numérico.' });
-    return
+    res.status(400);
+    res.json({
+      successfully: false,
+      message: 'O valor de amount deve ser numérico.',
+    });
+    return;
   }
 
   const currencyCode = currency || 'BRL';
@@ -28,8 +36,12 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const [companyResult]: any = await pool.execute('SELECT slug FROM company WHERE slug = ?', [companySlug]);
     if (companyResult.length === 0) {
-      res.status(404).json({ successfully: false, message: 'Empresa não encontrada.' });
-      return
+      res.status(404);
+      res.json({
+        successfully: false,
+        message: 'Empresa não encontrada.',
+      });
+      return;
     }
 
     const bodyId = uuidv4().replace(/-/g, '').slice(0, 16);
@@ -46,9 +58,9 @@ router.post('/', async (req: Request, res: Response) => {
           },
         ],
         back_urls: {
-          success: `${process.env.APP_URL}/invoices/success`,
-          failure: `${process.env.APP_URL}/invoices/failure`,
-          pending: `${process.env.APP_URL}/invoices/pending`,
+          success: `${process.env.APP_URL}/transaction/success`,
+          failure: `${process.env.APP_URL}/transaction/failure`,
+          pending: `${process.env.APP_URL}/transaction/pending`,
         },
         metadata: {
           payment_id: bodyId,
@@ -60,27 +72,32 @@ router.post('/', async (req: Request, res: Response) => {
     const response = await preference.create(preferenceData);
     const preferenceId = response.id;
 
-    // Insere o pedido usando companySlug, que é a chave primária da tabela company
-    const insertOrderSql = `
-      INSERT INTO orders (company_slug, amount, description, preference_id, currency, body_id)
+    const inserttransactionSql = `
+      INSERT INTO transactions (company_slug, amount, description, preference_id, currency, body_id)
       VALUES (?, ?, ?, ?, ?, ?);
     `;
-    const [orderResult]: any = await pool.execute(insertOrderSql, [companySlug, parsedAmount, description, preferenceId, currencyCode, bodyId]);
+    const [transactionResult]: any = await pool.execute(inserttransactionSql, [companySlug, parsedAmount, description, preferenceId, currencyCode, bodyId]);
 
-    res.status(201).json({
+    res.status(201);
+    res.json({
       successfully: true,
       message: 'Pedido criado com sucesso.',
       preferenceId,
-      orderId: orderResult.insertId,
+      transactionId: transactionResult.insertId,
       currency: currencyCode,
       bodyId,
-      preference: response
+      preference: response,
     });
+    return;
   } catch (error) {
     console.error('Erro ao criar pedido:', error);
-    res.status(500).json({ successfully: false, message: 'Erro ao criar pedido.' });
+    res.status(500);
+    res.json({
+      successfully: false,
+      message: 'Erro ao criar pedido.',
+    });
+    return;
   }
 });
 
 export default router;
-
